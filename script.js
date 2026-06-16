@@ -129,3 +129,27 @@ function updateDashboard() {
         list.appendChild(li);
     });
 }
+function updateUnpaidList() {
+
+    const list = document.getElementById("unpaidList");
+    list.innerHTML = "";
+
+    payments.forEach(p => {
+
+        const balance = Number(p.rent) - Number(p.amount);
+
+        if (balance > 0) {
+
+            const li = document.createElement("li");
+
+            li.textContent =
+                p.tenant +
+                " owes $" + balance +
+                " (Unit " + p.unit + ")";
+
+            li.style.color = "red";
+
+            list.appendChild(li);
+        }
+    });
+}
