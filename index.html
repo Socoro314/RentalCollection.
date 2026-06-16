@@ -1,35 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Rental Management System</title>
+    <title>Rental Dashboard Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <!-- LOGIN -->
-<div id="loginBox">
+<div id="loginBox" class="centerBox">
     <h2>Admin Login</h2>
     <input id="password" type="password" placeholder="Enter password">
     <button onclick="login()">Login</button>
-    <p id="error" style="color:red;"></p>
+    <p id="error"></p>
 </div>
 
 <!-- APP -->
 <div id="app" style="display:none;">
 
-    <h1>Rental Management System</h1>
+    <h1>Rental Dashboard Pro</h1>
 
-    <!-- DASHBOARD -->
-    <h2>Dashboard</h2>
-    <div class="dashboard">
-        <p>Total Collected: $<span id="totalCollected">0</span></p>
-        <p>Total Expected: $<span id="totalExpected">0</span></p>
-        <p>Balance: $<span id="balance">0</span></p>
+    <!-- DASH CARDS -->
+    <div class="cards">
+        <div class="card">
+            <h3>Total Collected</h3>
+            <p>$<span id="totalCollected">0</span></p>
+        </div>
+
+        <div class="card">
+            <h3>Total Expected</h3>
+            <p>$<span id="totalExpected">0</span></p>
+        </div>
+
+        <div class="card">
+            <h3>Balance</h3>
+            <p>$<span id="balance">0</span></p>
+        </div>
     </div>
 
+    <hr>
+
     <!-- FORM -->
-    <div>
+    <div class="form">
         <input id="tenant" placeholder="Tenant Name">
         <input id="property" placeholder="Property Name">
         <input id="unit" placeholder="Unit Number">
@@ -38,18 +50,20 @@
         <button onclick="savePayment()">Save Payment</button>
     </div>
 
-    <!-- ACTIONS -->
+    <!-- SEARCH -->
     <input id="searchBox" placeholder="Search tenant..." onkeyup="searchTenant()">
 
+    <!-- BUTTONS -->
     <button onclick="exportCSV()">Export CSV</button>
 
     <hr>
 
+    <!-- LIST -->
     <h2>Payments</h2>
-    <ul id="paymentList"></ul>
+    <div id="paymentList"></div>
 
     <h2>Unpaid Rent</h2>
-    <ul id="unpaidList"></ul>
+    <div id="unpaidList"></div>
 
 </div>
 
