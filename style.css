@@ -1,34 +1,24 @@
-.dashboard {
-    background: #f2f2f2;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-}body {
-    font-family: Arial, sans-serif;
-    margin: 40px;
-}
-
-h1 {
-    color: navy;
+.body {
+    font-family: Arial;
+    margin: 30px;
 }
 
 input {
-    padding: 8px;
     margin: 5px;
+    padding: 8px;
 }
 
 button {
-    padding: 8px 15px;
-    background-color: green;
-    color: white;
-    border: none;
+    padding: 8px 12px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: darkgreen;
+.dashboard {
+    background: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 10px;
 }
 
 li {
-    margin: 8px 0;
+    margin: 6px 0;
 }
