@@ -1,26 +1,64 @@
 body {
     font-family: Arial;
-    margin: 25px;
+    margin: 0;
+    padding: 20px;
+    background: #f4f6f8;
+}
+
+.centerBox {
+    text-align: center;
+    margin-top: 100px;
 }
 
 input {
+    padding: 10px;
     margin: 5px;
-    padding: 8px;
 }
 
 button {
-    padding: 8px 12px;
+    padding: 10px 15px;
     margin: 5px;
     cursor: pointer;
+    border: none;
+    background: #2d6cdf;
+    color: white;
+    border-radius: 5px;
 }
 
-.dashboard {
-    background: #f2f2f2;
+button:hover {
+    background: #1b4fb8;
+}
+
+.cards {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form {
+    background: white;
     padding: 10px;
+    border-radius: 10px;
     margin-bottom: 10px;
-    border-radius: 6px;
 }
 
-li {
-    margin: 6px 0;
+#paymentList div,
+#unpaidList div {
+    background: white;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+}
+
+#unpaidList div {
+    border-left: 5px solid red;
 }
