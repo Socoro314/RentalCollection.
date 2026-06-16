@@ -4,14 +4,11 @@ let payments =
 let editIndex = -1;
 
 // INIT
-displayPayments();
-updateDashboard();
-updateUnpaidList();
+refreshAll();
 
 
 // LOGIN
 function login() {
-
     const password = document.getElementById("password").value;
 
     if (password === "1234") {
@@ -23,24 +20,27 @@ function login() {
 }
 
 
-// SAVE PAYMENT
+// SAVE
 function savePayment() {
 
     const tenant = document.getElementById("tenant").value;
+    const property = document.getElementById("property").value;
     const unit = document.getElementById("unit").value;
     const rent = Number(document.getElementById("rent").value);
     const amount = Number(document.getElementById("amount").value);
 
-    if (!tenant || !unit || !rent || !amount) {
+    if (!tenant || !property || !unit || !rent || !amount) {
         alert("Fill all fields");
         return;
     }
 
     const data = {
         tenant,
+        property,
         unit,
         rent,
         amount,
+        month: new Date().getMonth() + 1,
         date: new Date().toLocaleDateString()
     };
 
@@ -58,38 +58,43 @@ function savePayment() {
 }
 
 
-// CLEAR FORM
+// CLEAR
 function clearForm() {
     document.getElementById("tenant").value = "";
+    document.getElementById("property").value = "";
     document.getElementById("unit").value = "";
     document.getElementById("rent").value = "";
     document.getElementById("amount").value = "";
 }
 
 
-// DISPLAY PAYMENTS
-function displayPayments() {
+// DISPLAY
+function displayPayments(listData = payments) {
 
     const list = document.getElementById("paymentList");
     list.innerHTML = "";
 
-    payments.forEach((p, index) => {
+    listData.forEach((p, index) => {
 
         const li = document.createElement("li");
 
-        li.innerHTML =
-            `<b>${p.tenant}</b> | Unit ${p.unit} |
-            Paid $${p.amount} / Rent $${p.rent} |
-            ${p.date} `;
+        const balance = p.rent - p.amount;
 
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "Edit";
-        editBtn.onclick = () => {
-            document.getElementById("tenant").value = p.tenant;
-            document.getElementById("unit").value = p.unit;
-            document.getElementById("rent").value = p.rent;
-            document.getElementById("amount").value = p.amount;
-            editIndex = index;
+        li.innerHTML =
+            `<b>${p.tenant}</b> | ${p.property} | Unit ${p.unit} |
+            Paid $${p.amount} / Rent $${p.rent} |
+            Balance $${balance} | ${p.date}`;
+
+        const receiptBtn = document.createElement("button");
+        receiptBtn.textContent = "Receipt";
+        receiptBtn.onclick = () => {
+            alert(
+                "RECEIPT\n\n" +
+                "Tenant: " + p.tenant + "\n" +
+                "Property: " + p.property + "\n" +
+                "Unit: " + p.unit + "\n" +
+                "Paid: $" + p.amount
+            );
         };
 
         const delBtn = document.createElement("button");
@@ -100,7 +105,7 @@ function displayPayments() {
             refreshAll();
         };
 
-        li.appendChild(editBtn);
+        li.appendChild(receiptBtn);
         li.appendChild(delBtn);
 
         list.appendChild(li);
@@ -111,21 +116,40 @@ function displayPayments() {
 // DASHBOARD
 function updateDashboard() {
 
-    let collected = 0;
-    let expected = 0;
+    let totalCollected = 0;
+    let totalExpected = 0;
 
     payments.forEach(p => {
-        collected += Number(p.amount);
-        expected += Number(p.rent);
+        totalCollected += Number(p.amount);
+        totalExpected += Number(p.rent);
     });
 
-    document.getElementById("totalCollected").textContent = collected;
-    document.getElementById("totalExpected").textContent = expected;
-    document.getElementById("balance").textContent = expected - collected;
+    document.getElementById("totalCollected").textContent = totalCollected;
+    document.getElementById("totalExpected").textContent = totalExpected;
+    document.getElementById("balance").textContent =
+        totalExpected - totalCollected;
+
+    drawChart(totalCollected, totalExpected);
 }
 
 
-// UNPAID LIST
+// CHART (simple bar)
+function drawChart(collected, expected) {
+
+    const c = document.getElementById("chart");
+    const ctx = c.getContext("2d");
+
+    ctx.clearRect(0, 0, 400, 150);
+
+    ctx.fillStyle = "green";
+    ctx.fillRect(50, 50, collected / 10, 50);
+
+    ctx.fillStyle = "red";
+    ctx.fillRect(50, 110, expected / 10, 50);
+}
+
+
+// UNPAID
 function updateUnpaidList() {
 
     const list = document.getElementById("unpaidList");
@@ -133,12 +157,13 @@ function updateUnpaidList() {
 
     payments.forEach(p => {
 
-        const balance = Number(p.rent) - Number(p.amount);
+        const balance = p.rent - p.amount;
 
         if (balance > 0) {
+
             const li = document.createElement("li");
-            li.textContent = `${p.tenant} owes $${balance} (Unit ${p.unit})`;
             li.style.color = "red";
+            li.textContent = `${p.tenant} owes $${balance} (${p.property})`;
             list.appendChild(li);
         }
     });
@@ -154,18 +179,26 @@ function searchTenant() {
         p.tenant.toLowerCase().includes(keyword)
     );
 
-    const list = document.getElementById("paymentList");
-    list.innerHTML = "";
+    displayPayments(filtered);
+}
 
-    filtered.forEach(p => {
 
-        const li = document.createElement("li");
+// EXPORT CSV
+function exportCSV() {
 
-        li.textContent =
-            `${p.tenant} | Unit ${p.unit} | Paid $${p.amount} | Rent $${p.rent} | ${p.date}`;
+    let csv = "Tenant,Property,Unit,Rent,Paid,Balance,Date\n";
 
-        list.appendChild(li);
+    payments.forEach(p => {
+        csv += `${p.tenant},${p.property},${p.unit},${p.rent},${p.amount},${p.rent - p.amount},${p.date}\n`;
     });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "rent-data.csv";
+    a.click();
 }
 
 
