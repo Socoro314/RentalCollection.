@@ -1,10 +1,9 @@
 let payments =
     JSON.parse(localStorage.getItem("payments")) || [];
 
-let editIndex = -1;
-
 displayPayments();
 updateDashboard();
+updateUnpaidList();
 
 function savePayment() {
 
@@ -18,26 +17,21 @@ function savePayment() {
         return;
     }
 
-    const data = {
+    payments.push({
         tenant,
         unit,
         rent,
         amount,
         date: new Date().toLocaleDateString()
-    };
-
-    if (editIndex === -1) {
-        payments.push(data);
-    } else {
-        payments[editIndex] = data;
-        editIndex = -1;
-    }
+    });
 
     localStorage.setItem("payments", JSON.stringify(payments));
 
     clearForm();
+
     displayPayments();
     updateDashboard();
+    updateUnpaidList();
 }
 
 function clearForm() {
@@ -56,32 +50,8 @@ function displayPayments() {
 
         const li = document.createElement("li");
 
-        li.innerHTML =
-            `<b>${p.tenant}</b> | Unit ${p.unit} |
-            Paid $${p.amount} / Rent $${p.rent} |
-            Date: ${p.date} `;
-
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "Edit";
-        editBtn.onclick = () => {
-            document.getElementById("tenant").value = p.tenant;
-            document.getElementById("unit").value = p.unit;
-            document.getElementById("rent").value = p.rent;
-            document.getElementById("amount").value = p.amount;
-            editIndex = index;
-        };
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "Delete";
-        deleteBtn.onclick = () => {
-            payments.splice(index, 1);
-            localStorage.setItem("payments", JSON.stringify(payments));
-            displayPayments();
-            updateDashboard();
-        };
-
-        li.appendChild(editBtn);
-        li.appendChild(deleteBtn);
+        li.textContent =
+            `${p.tenant} | Unit ${p.unit} | Paid $${p.amount} | Rent $${p.rent} | ${p.date}`;
 
         list.appendChild(li);
     });
@@ -101,34 +71,8 @@ function updateDashboard() {
     document.getElementById("totalExpected").textContent = totalExpected;
     document.getElementById("balance").textContent =
         totalExpected - totalCollected;
-}function searchTenant() {
-
-    const keyword =
-        document.getElementById("searchBox").value.toLowerCase();
-
-    const filtered = payments.filter(p =>
-        p.tenant.toLowerCase().includes(keyword)
-    );
-
-    const list =
-        document.getElementById("paymentList");
-
-    list.innerHTML = "";
-
-    filtered.forEach((p, index) => {
-
-        const li = document.createElement("li");
-
-        li.textContent =
-            p.tenant +
-            " | Unit " + p.unit +
-            " | Paid $" + p.amount +
-            " | Rent $" + p.rent +
-            " | " + p.date;
-
-        list.appendChild(li);
-    });
 }
+
 function updateUnpaidList() {
 
     const list = document.getElementById("unpaidList");
@@ -143,9 +87,7 @@ function updateUnpaidList() {
             const li = document.createElement("li");
 
             li.textContent =
-                p.tenant +
-                " owes $" + balance +
-                " (Unit " + p.unit + ")";
+                `${p.tenant} owes $${balance} (Unit ${p.unit})`;
 
             li.style.color = "red";
 
