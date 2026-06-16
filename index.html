@@ -4,23 +4,55 @@
     <title>Rental Collection System</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
+<!-- LOGIN -->
+<div id="loginBox">
+    <h2>Admin Login</h2>
+    <input id="password" type="password" placeholder="Enter password">
+    <button onclick="login()">Login</button>
+    <p id="error" style="color:red;"></p>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
 
     <h1>Rental Collection System</h1>
 
-    <div class="form">
-        <input id="tenant" type="text" placeholder="Tenant Name">
-        <input id="amount" type="number" placeholder="Rent Amount">
+    <!-- DASHBOARD -->
+    <h2>Dashboard</h2>
+    <div class="dashboard">
+        <p>Total Collected: $<span id="totalCollected">0</span></p>
+        <p>Total Expected: $<span id="totalExpected">0</span></p>
+        <p>Balance: $<span id="balance">0</span></p>
+    </div>
+
+    <hr>
+
+    <!-- FORM -->
+    <div>
+        <input id="tenant" placeholder="Tenant Name">
+        <input id="unit" placeholder="Unit Number">
+        <input id="rent" type="number" placeholder="Monthly Rent">
+        <input id="amount" type="number" placeholder="Payment Amount">
         <button onclick="savePayment()">Save Payment</button>
     </div>
 
-    <h2>Payment Records</h2>
-<input id="searchBox" type="text" placeholder="Search tenant..." onkeyup="searchTenant()">
+    <!-- SEARCH -->
+    <input id="searchBox" placeholder="Search tenant..." onkeyup="searchTenant()">
+
+    <!-- LIST -->
+    <h2>Payments</h2>
     <ul id="paymentList"></ul>
 
-    <script src="script.js"></script>
+    <!-- UNPAID -->
+    <h2>Unpaid Rent</h2>
+    <ul id="unpaidList"></ul>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>
-<h2>Unpaid / Balance Alerts</h2>
-<ul id="unpaidList"></ul>
