@@ -28,11 +28,6 @@
         <p>Balance: $<span id="balance">0</span></p>
     </div>
 
-    <!-- SIMPLE CHART -->
-    <canvas id="chart" width="400" height="150"></canvas>
-
-    <hr>
-
     <!-- FORM -->
     <div>
         <input id="tenant" placeholder="Tenant Name">
@@ -44,15 +39,15 @@
     </div>
 
     <!-- ACTIONS -->
-    <button onclick="exportCSV()">Export CSV</button>
-
     <input id="searchBox" placeholder="Search tenant..." onkeyup="searchTenant()">
 
-    <!-- LIST -->
+    <button onclick="exportCSV()">Export CSV</button>
+
+    <hr>
+
     <h2>Payments</h2>
     <ul id="paymentList"></ul>
 
-    <!-- UNPAID -->
     <h2>Unpaid Rent</h2>
     <ul id="unpaidList"></ul>
 
