@@ -1,7 +1,4 @@
-let payments =
-    JSON.parse(localStorage.getItem("payments")) || [];
-
-let editIndex = -1;
+let payments = JSON.parse(localStorage.getItem("payments")) || [];
 
 // INIT
 refreshAll();
@@ -9,6 +6,7 @@ refreshAll();
 
 // LOGIN
 function login() {
+
     const password = document.getElementById("password").value;
 
     if (password === "1234") {
@@ -20,7 +18,7 @@ function login() {
 }
 
 
-// SAVE
+// SAVE PAYMENT
 function savePayment() {
 
     const tenant = document.getElementById("tenant").value;
@@ -30,26 +28,18 @@ function savePayment() {
     const amount = Number(document.getElementById("amount").value);
 
     if (!tenant || !property || !unit || !rent || !amount) {
-        alert("Fill all fields");
+        alert("Please fill all fields");
         return;
     }
 
-    const data = {
+    payments.push({
         tenant,
         property,
         unit,
         rent,
         amount,
-        month: new Date().getMonth() + 1,
         date: new Date().toLocaleDateString()
-    };
-
-    if (editIndex === -1) {
-        payments.push(data);
-    } else {
-        payments[editIndex] = data;
-        editIndex = -1;
-    }
+    });
 
     localStorage.setItem("payments", JSON.stringify(payments));
 
@@ -58,7 +48,7 @@ function savePayment() {
 }
 
 
-// CLEAR
+// CLEAR FORM
 function clearForm() {
     document.getElementById("tenant").value = "";
     document.getElementById("property").value = "";
@@ -68,13 +58,13 @@ function clearForm() {
 }
 
 
-// DISPLAY
-function displayPayments(listData = payments) {
+// DISPLAY PAYMENTS
+function displayPayments(list = payments) {
 
-    const list = document.getElementById("paymentList");
-    list.innerHTML = "";
+    const container = document.getElementById("paymentList");
+    container.innerHTML = "";
 
-    listData.forEach((p, index) => {
+    list.forEach((p, index) => {
 
         const li = document.createElement("li");
 
@@ -85,18 +75,6 @@ function displayPayments(listData = payments) {
             Paid $${p.amount} / Rent $${p.rent} |
             Balance $${balance} | ${p.date}`;
 
-        const receiptBtn = document.createElement("button");
-        receiptBtn.textContent = "Receipt";
-        receiptBtn.onclick = () => {
-            alert(
-                "RECEIPT\n\n" +
-                "Tenant: " + p.tenant + "\n" +
-                "Property: " + p.property + "\n" +
-                "Unit: " + p.unit + "\n" +
-                "Paid: $" + p.amount
-            );
-        };
-
         const delBtn = document.createElement("button");
         delBtn.textContent = "Delete";
         delBtn.onclick = () => {
@@ -105,10 +83,23 @@ function displayPayments(listData = payments) {
             refreshAll();
         };
 
+        const receiptBtn = document.createElement("button");
+        receiptBtn.textContent = "Receipt";
+        receiptBtn.onclick = () => {
+            alert(
+                "RECEIPT\n\n" +
+                "Tenant: " + p.tenant + "\n" +
+                "Property: " + p.property + "\n" +
+                "Unit: " + p.unit + "\n" +
+                "Paid: $" + p.amount + "\n" +
+                "Date: " + p.date
+            );
+        };
+
         li.appendChild(receiptBtn);
         li.appendChild(delBtn);
 
-        list.appendChild(li);
+        container.appendChild(li);
     });
 }
 
@@ -128,28 +119,10 @@ function updateDashboard() {
     document.getElementById("totalExpected").textContent = totalExpected;
     document.getElementById("balance").textContent =
         totalExpected - totalCollected;
-
-    drawChart(totalCollected, totalExpected);
 }
 
 
-// CHART (simple bar)
-function drawChart(collected, expected) {
-
-    const c = document.getElementById("chart");
-    const ctx = c.getContext("2d");
-
-    ctx.clearRect(0, 0, 400, 150);
-
-    ctx.fillStyle = "green";
-    ctx.fillRect(50, 50, collected / 10, 50);
-
-    ctx.fillStyle = "red";
-    ctx.fillRect(50, 110, expected / 10, 50);
-}
-
-
-// UNPAID
+// UNPAID LIST
 function updateUnpaidList() {
 
     const list = document.getElementById("unpaidList");
@@ -160,7 +133,6 @@ function updateUnpaidList() {
         const balance = p.rent - p.amount;
 
         if (balance > 0) {
-
             const li = document.createElement("li");
             li.style.color = "red";
             li.textContent = `${p.tenant} owes $${balance} (${p.property})`;
@@ -193,11 +165,11 @@ function exportCSV() {
     });
 
     const blob = new Blob([csv], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "rent-data.csv";
+    a.download = "rental-data.csv";
     a.click();
 }
 
