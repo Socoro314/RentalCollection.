@@ -101,4 +101,31 @@ function updateDashboard() {
     document.getElementById("totalExpected").textContent = totalExpected;
     document.getElementById("balance").textContent =
         totalExpected - totalCollected;
+}function searchTenant() {
+
+    const keyword =
+        document.getElementById("searchBox").value.toLowerCase();
+
+    const filtered = payments.filter(p =>
+        p.tenant.toLowerCase().includes(keyword)
+    );
+
+    const list =
+        document.getElementById("paymentList");
+
+    list.innerHTML = "";
+
+    filtered.forEach((p, index) => {
+
+        const li = document.createElement("li");
+
+        li.textContent =
+            p.tenant +
+            " | Unit " + p.unit +
+            " | Paid $" + p.amount +
+            " | Rent $" + p.rent +
+            " | " + p.date;
+
+        list.appendChild(li);
+    });
 }
