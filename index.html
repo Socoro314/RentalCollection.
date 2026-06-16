@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Rental Collection System</title>
+    <title>Rental Management System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -18,7 +18,7 @@
 <!-- APP -->
 <div id="app" style="display:none;">
 
-    <h1>Rental Collection System</h1>
+    <h1>Rental Management System</h1>
 
     <!-- DASHBOARD -->
     <h2>Dashboard</h2>
@@ -28,18 +28,24 @@
         <p>Balance: $<span id="balance">0</span></p>
     </div>
 
+    <!-- SIMPLE CHART -->
+    <canvas id="chart" width="400" height="150"></canvas>
+
     <hr>
 
     <!-- FORM -->
     <div>
         <input id="tenant" placeholder="Tenant Name">
+        <input id="property" placeholder="Property Name">
         <input id="unit" placeholder="Unit Number">
         <input id="rent" type="number" placeholder="Monthly Rent">
-        <input id="amount" type="number" placeholder="Payment Amount">
+        <input id="amount" type="number" placeholder="Paid Amount">
         <button onclick="savePayment()">Save Payment</button>
     </div>
 
-    <!-- SEARCH -->
+    <!-- ACTIONS -->
+    <button onclick="exportCSV()">Export CSV</button>
+
     <input id="searchBox" placeholder="Search tenant..." onkeyup="searchTenant()">
 
     <!-- LIST -->
